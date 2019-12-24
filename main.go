@@ -1,7 +1,7 @@
 package main
 
 import (
-	"auctionhouse"
+	ah "auctionhouse"
 	"fmt"
 )
 
@@ -20,26 +20,35 @@ func main() {
 	// 	fmt.Println(out)
 	// }
 	// fmt.Println(auctionhouse.GetRealms())
-	requestChannel := make(chan auctionhouse.AuctionHandler, 300)
-	d, check := auctionhouse.NewDaemon("us", "en_US")
-	dumb := make(chan int, 0)
-	if !check {
-		fmt.Println(d.Token.Token)
-	}
-	_, check = d.GetRealms()
-	if !check {
-		fmt.Println("Bad thangs popping")
-	}
-	ah := make([]auctionhouse.AuctionHandler, 0)
-	for i := range d.Realms {
-		ah = append(ah, auctionhouse.NewAuctionHandler(d.Token, d.Realms[i], ""))
-	}
-	server := ah[0]
-	go server.SendAuctionToDB()
-	server.RequestAuctionData()
-	for _, v := range ah {
-		requestChannel <- v
-	}
-	<-dumb
+
+	// requestChannel := make(chan auctionhouse.AuctionHandler, 300)
+	// dbInfo, err := auctionhouse.GetDBInfo()
+	// if !err {
+	// 	return
+	// }
+	// d, check := auctionhouse.NewDaemon("us", "en_US")
+	// dumb := make(chan int, 0)
+	// if !check {
+	// 	fmt.Println(d.Token.Token)
+	// }
+	// _, check = d.GetRealms()
+	// if !check {
+	// 	fmt.Println("Bad thangs popping")
+	// }
+	// ah := make([]auctionhouse.AuctionHandler, 0)
+	// for i := range d.Realms {
+	// 	ah = append(ah, auctionhouse.NewAuctionHandler(d.Token, d.Realms[i], dbInfo))
+	// }
+	// server := ah[0]
+	// go server.SendAuctionToDB()
+	// server.RequestAuctionData()
+	// for _, v := range ah {
+	// 	requestChannel <- v
+	// }
+	// <-dumb
+
+	t := ah.NewToken()
+	fmt.Println(t)
+	t.ValidateToken()
 
 }
