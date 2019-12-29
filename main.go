@@ -50,5 +50,13 @@ func main() {
 	t := ah.NewToken()
 	fmt.Println(t)
 	t.ValidateToken()
+	itemMan := ah.NewItemManager()
+
+	item, check := itemMan.QueryItemInformation(169299, t)
+	if !check {
+		fmt.Println("Item not found")
+	} else {
+		fmt.Println(item)
+	}
 
 }
