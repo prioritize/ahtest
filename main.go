@@ -27,7 +27,17 @@ func main() {
 	// 	return
 	// }
 	// d, check := auctionhouse.NewDaemon("us", "en_US")
-	// dumb := make(chan int, 0)
+	dumb := make(chan int, 0)
+	d, ok := ah.NewDaemon("us", "en_US")
+	if !ok {
+		fmt.Println("Daemon was not generated")
+		return
+	}
+	realms, ok := d.GetRealms()
+	if !ok {
+		fmt.Println("Realms were not generated")
+		return
+	}
 	// if !check {
 	// 	fmt.Println(d.Token.Token)
 	// }
@@ -45,18 +55,24 @@ func main() {
 	// for _, v := range ah {
 	// 	requestChannel <- v
 	// }
-	// <-dumb
 
 	t := ah.NewToken()
 	fmt.Println(t)
 	t.ValidateToken()
 	itemMan := ah.NewItemManager()
-
-	item, check := itemMan.QueryItemInformation(169299, t)
-	if !check {
-		fmt.Println("Item not found")
-	} else {
-		fmt.Println(item)
+	a := ah.ServerHandler(realms, t.Token(), itemMan.DBInfo, &itemMan)
+	for _, v := range a {
+		v.RequestAuctionData()
 	}
+	// item := itemMan.NewItem(169299, t.Token())
+	// fmt.Println(item.Icon.Asset[0].HREF)
+	itemMan.CheckItem(152511, t.Token())
+	// // item, check := itemMan.QueryItemInformation(169299, t)
+	// if !check {
+	// 	fmt.Println("Item not found")
+	// } else {
+	// 	fmt.Println(item)
+	// }
 
+	<-dumb
 }
