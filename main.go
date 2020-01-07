@@ -2,6 +2,7 @@ package main
 
 import (
 	ah "auctionhouse"
+	"fmt"
 	"log"
 	"time"
 )
@@ -84,6 +85,7 @@ func main() {
 		if time.Since(v.LastChecked) > 10*time.Minute {
 			v.RequestAuctionData()
 			v.LastChecked = time.Now()
+			fmt.Println("Finished with " + v.Realm.Slug)
 		}
 	}
 
