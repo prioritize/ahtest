@@ -81,13 +81,18 @@ func main() {
 	if !ok {
 		log.Fatal("Unable to create Daemon")
 	}
+	rate := time.Tick(time.Second * 5)
+	startTime := time.Now()
 	for _, v := range d.AuctionManager {
+		<-rate
+
 		if time.Since(v.LastChecked) > 10*time.Minute {
-			v.RequestAuctionData()
+			go v.RequestAuctionData()
 			v.LastChecked = time.Now()
-			fmt.Println("Finished with " + v.Realm.Slug)
 		}
 	}
-
+	endTime := time.Now()
+	fmt.Println("The total time to process all servers was:")
+	fmt.Println(endTime.Sub(startTime))
 	<-dumb
 }
