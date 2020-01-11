@@ -4,7 +4,6 @@ import (
 	ah "auctionhouse"
 	"fmt"
 	"log"
-	"time"
 )
 
 func main() {
@@ -77,22 +76,28 @@ func main() {
 	// } else {
 	// 	fmt.Println(item)
 	// }
-	d, ok := ah.NewDaemon("us", "en_US")
+	d, ok := ah.NewDaemon("us", "en_US", 10, 10, 20)
 	if !ok {
 		log.Fatal("Unable to create Daemon")
 	}
-	rate := time.Tick(time.Second * 5)
-	startTime := time.Now()
-	for _, v := range d.AuctionManager {
-		<-rate
+	fmt.Println(d.RealmCount())
+	fmt.Println(d.DBCount())
+	fmt.Println(d.HTTPCount())
+	d.AuctionWorker()
+	fmt.Println(d.AuctionCount())
 
-		if time.Since(v.LastChecked) > 10*time.Minute {
-			go v.RequestAuctionData()
-			v.LastChecked = time.Now()
-		}
-	}
-	endTime := time.Now()
-	fmt.Println("The total time to process all servers was:")
-	fmt.Println(endTime.Sub(startTime))
+	// rate := time.Tick(time.Second * 5)
+	// startTime := time.Now()
+	// for _, v := range d.AuctionManager {
+	// 	<-rate
+
+	// 	if time.Since(v.LastChecked) > 10*time.Minute {
+	// 		go v.RequestAuctionData()
+	// 		v.LastChecked = time.Now()
+	// 	}
+	// }
+	// endTime := time.Now()
+	// fmt.Println("The total time to process all servers was:")
+	// fmt.Println(endTime.Sub(startTime))
 	<-dumb
 }
